@@ -9,3 +9,5 @@ to personalize your life calendar you need to put your birthdate in the "start" 
 to automatically refresh your life calendar each time you start your computer put a shortcut of "life_calendar_wallpaper.py" in your startup folder: (press windows+R, type "shell:startup" and press OK)
 
 made after watching Tim Urban Ted Talk (https://www.youtube.com/watch?v=arj7oStGLkU)
+
+![alt text](https://github.com/liardnos/life-calendar-wallpaper/blob/main/screenshot.png)
