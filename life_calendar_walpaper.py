@@ -3,6 +3,16 @@ import math
 import time
 import os
 
+
+start = [7, 5, 2001] # your birthday day/month/year
+life_expectancy = 82 # how many year you are supposed to live
+
+# your screen size
+window_x = int(1920)
+window_y = int(1080)
+
+
+
 try:
     import pygame
 except :
@@ -16,18 +26,12 @@ except :
 import pygame
 from wallpaper import set_wallpaper
 
-start = [7, 5, 2001] # your birthday day/month/year
-life_expentancy = 82 # how many year you are supposed to live
-
-# your screen size
-window_x = int(1920)
-window_y = int(1080)
-
-
+start[0] -= 1
+start[1] -= 1
 start[2] -= 1970
 t_start = start[0]*24*60*60 + start[1]*365.25/12*24*60*60 + start[2]*365.25*24*60*60
-t_end = t_start + life_expentancy*365*24*60*60
-nb_weeks = life_expentancy*365/7
+t_end = t_start + life_expectancy*365*24*60*60
+nb_weeks = life_expectancy*365/7
 print(start, start, t_end)
 weeks_len = 7*24*60*60
 
