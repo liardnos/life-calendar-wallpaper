@@ -2,7 +2,8 @@
 automatically set and update your life calendar as a wallpaper (windows only)
 
 When launch this script will generate a life calendar corresponding to your birthday and life expectancy.
-Each square is a week, Red Squares correspond to past weeks, grey squares correspond to future weeks.
+Each number is a week, Red one's corresponds to past weeks, grey one's correspond to future weeks.
+The calendar is aligned on your birth week.
 
 To personalize your life calendar you need to put your birthdate in the "start" variable and your country life expectancy in "life_expectancy"
 
