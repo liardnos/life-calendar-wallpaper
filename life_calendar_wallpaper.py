@@ -5,12 +5,13 @@ import os
 import datetime
 
 start = [7, 5, 2001] # your birthday day/month/year
-life_expectancy = 80.8 # how many year you are supposed to live
+life_expectancy = 80.8 # how many year you're supposed to live
 
 # your screen size
 window_x = int(1920)
 window_y = int(1080)
 
+update_rate = 60 # how many seconds between wallpaper's updates (-1 = only one on user login)
 
 
 try:
@@ -35,13 +36,15 @@ start[2] -= 1970
 t_start = start[0]*24*60*60 + start[1]*365.25/12*24*60*60 + start[2]*365.25*24*60*60
 #print("dif ", (t_start % weeks_len)/weeks_len*7)
 t_start -= t_start % weeks_len + weeks_len/7*3
-t_end = t_start + life_expectancy*365.25*24*60*60
+t_live = life_expectancy*365.25*24*60*60
+t_end = t_start + t_live
 nb_weeks = life_expectancy*365.25/7
 #print(start, start, t_end)
 
 
 
-window = pygame.display.set_mode((window_x, window_y))
+#window = pygame.display.set_mode((window_x, window_y))
+window = pygame.Surface([window_x, window_y])
 pygame.font.init()
 
 #print("nb_weeks", nb_weeks)
@@ -66,10 +69,20 @@ font = pygame.font.Font(pygame.font.get_default_font(), int(size-2))
 #for x in range(40):
     #print("#"*40)
 
+
 def generate_wall():
     n = 0
     actual = time.time() + weeks_len
     t = t_start
+
+    live_percent = (time.time() - t_start)/t_live*100
+    sprt = font.render(str(live_percent)[0:12]+"%", True, (75, 75, 75))
+    #sprt = pygame.transform.rotozoom(sprt, 0, 1)
+    sprt_size = sprt.get_size()
+
+    window.blit(sprt, (window_x/2-sprt_size[0]/2, inc_y*1-sprt_size[1]/2))
+
+
     date_prev = date = datetime.datetime.fromtimestamp(t)
     for x in range(3, size_x-3):
         sprt = font.render(str(x-3), True, (75, 75, 75))
@@ -134,8 +147,19 @@ def generate_wall():
                 break
             date_prev = date
 
+i = 0
 generate_wall()
+while 1: # try to set the wallpaper 5 time
+    try:
+        pygame.image.save(window, "screenshot_" + str(i) + ".png")
+        set_wallpaper("screenshot_" + str(i) + ".png")
+        window.fill((0, 0, 0))
+        generate_wall()
+        print("wallpaper set")
+    except:
+        print("set_wallpaper failed")
+    if update_rate == -1:
+        break
 
-pygame.display.flip()
-pygame.image.save(window, "screenshot.png")
-set_wallpaper("screenshot.png")
+    time.sleep(update_rate)
+    i = i % 16 + 1
