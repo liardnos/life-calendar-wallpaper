@@ -113,7 +113,6 @@ def generate_wall():
     actual = time.time() + weeks_len
     date_prev = datetime.datetime.fromtimestamp(t)
     for x in range(3, size_x-3):
-        print("ok")
         sprt = font.render(str(x-3), True, (75, 75, 75))
         sprt = pygame.transform.rotozoom(sprt, 45, 1)
         sprt_size = sprt.get_size()
