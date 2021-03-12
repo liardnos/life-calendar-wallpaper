@@ -27,8 +27,11 @@ except :
 try:
     from wallpaper import set_wallpaper
 except :
-    os.system('python -m pip install py-wallpaper')
-    from wallpaper import set_wallpaper
+    try:
+        os.system('python -m pip install py-wallpaper')
+        from wallpaper import set_wallpaper
+    except :
+        print("cannot : from wallpaper import set_wallpaper")
 
 weeks_len = 7*24*60*60
 year_len = 365.25*24*60*60
