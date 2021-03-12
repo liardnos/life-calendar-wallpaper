@@ -3,6 +3,8 @@ import math
 import time
 import os
 import datetime
+import ctypes
+import pathlib
 
 start = [7, 5, 2001] # your birthday day/month/year
 life_expectancy = 80.8 # how many year you're supposed to live
@@ -13,19 +15,20 @@ window_y = int(1080)
 
 update_rate = 60 # how many seconds between wallpaper's updates (-1 = only one on user login)
 
-
 try:
     import pygame
+    from pygame.locals import *
 except :
     os.system('python -m pip install pygame')
+    import pygame
+    from pygame.locals import *
+
 
 try:
     from wallpaper import set_wallpaper
 except :
     os.system('python -m pip install py-wallpaper')
-
-import pygame
-from wallpaper import set_wallpaper
+    from wallpaper import set_wallpaper
 
 weeks_len = 7*24*60*60
 year_len = 365.25*24*60*60
@@ -71,20 +74,43 @@ font = pygame.font.Font(pygame.font.get_default_font(), int(size-2))
 
 
 def generate_wall():
-    n = 0
-    actual = time.time() + weeks_len
-    t = t_start
+    global t_prev
+    rect = (0, 0, window_x, inc_y*1.5)
+    pygame.Surface.fill(window, (0, 0, 0), rect=rect)
 
     live_percent = (time.time() - t_start)/t_live*100
-    sprt = font.render(str(live_percent)[0:12]+"%", True, (75, 75, 75))
+    sprt = font.render(str(live_percent)[0:10]+"%", True, (75, 75, 75))
+    #sprt = pygame.transform.rotozoom(sprt, 0, 1)
+    sprt_size = sprt.get_size()
+    window.blit(sprt, (window_x*2/5-sprt_size[0]/2, inc_y*1-sprt_size[1]/2))
+
+    t_remaining = int(t_live - (time.time() - t_start))
+    t_remaining_str = ""
+    tmp_str = str(t_remaining)
+    print(tmp_str)
+    tmp_str = tmp_str[::-1]
+    print(tmp_str)
+    for x in range(int(len(tmp_str)/3)+1):
+        t_remaining_str = tmp_str[x*3:x*3+3][::-1] + " " + t_remaining_str
+    str(t_remaining_str)
+
+    sprt = font.render(t_remaining_str, True, (75, 75, 75))
     #sprt = pygame.transform.rotozoom(sprt, 0, 1)
     sprt_size = sprt.get_size()
 
-    window.blit(sprt, (window_x/2-sprt_size[0]/2, inc_y*1-sprt_size[1]/2))
+    window.blit(sprt, (window_x*3/5-sprt_size[0]/2, inc_y*1-sprt_size[1]/2))
 
-
-    date_prev = date = datetime.datetime.fromtimestamp(t)
+    if datetime.datetime.fromtimestamp(time.time()).day == datetime.datetime.fromtimestamp(t_prev).day:
+        return
+    t_prev = time.time()
+    rect = (0, inc_y*1.5, window_x, window_y - inc_y*3)
+    pygame.Surface.fill(window, (0, 0, 0), rect=rect)
+    n = 0
+    t = t_start
+    actual = time.time() + weeks_len
+    date_prev = datetime.datetime.fromtimestamp(t)
     for x in range(3, size_x-3):
+        print("ok")
         sprt = font.render(str(x-3), True, (75, 75, 75))
         sprt = pygame.transform.rotozoom(sprt, 45, 1)
         sprt_size = sprt.get_size()
@@ -148,12 +174,19 @@ def generate_wall():
             date_prev = date
 
 i = 0
+t_prev = 0
 generate_wall()
-while 1: # try to set the wallpaper 5 time
+T = time.time()
+while 1:
+    """
+    pygame.display.flip()
+    for event in pygame.event.get():
+        if (event.type == QUIT):
+            exit()
+    """
     try:
-        pygame.image.save(window, "screenshot_" + str(i) + ".png")
-        set_wallpaper("screenshot_" + str(i) + ".png")
-        window.fill((0, 0, 0))
+        pygame.image.save(window, "img\screenshot_" + str(i) + ".png")
+        set_wallpaper("img\screenshot_" + str(i) + ".png")
         generate_wall()
         print("wallpaper set")
     except:
@@ -161,5 +194,9 @@ while 1: # try to set the wallpaper 5 time
     if update_rate == -1:
         break
 
-    time.sleep(update_rate)
-    i = i % 16 + 1
+    if time.time() - T < update_rate:
+        time.sleep(update_rate - (time.time() - T))
+    else:
+        print("miss frame")
+    T = time.time()
+    i = i % 1 + 1
