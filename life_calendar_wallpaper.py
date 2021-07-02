@@ -13,7 +13,7 @@ life_expectancy = 80.8 # how many year you're supposed to live
 window_x = int(1920)
 window_y = int(1080)
 
-update_rate = 60 # how many seconds between wallpaper's updates (-1 = only one on user login)
+update_rate = 3 # how many seconds between wallpaper's updates (-1 = only one on user login)
 
 try:
     import pygame
@@ -80,14 +80,15 @@ def generate_wall():
     global t_prev
     rect = (0, 0, window_x, inc_y*1.5)
     pygame.Surface.fill(window, (0, 0, 0), rect=rect)
-
-    live_percent = (time.time() - t_start)/t_live*100
+    t_now = time.time()
+    print(t_now)
+    live_percent = (t_now - t_start)/t_live*100
     sprt = font.render(str(live_percent)[0:10]+"%", True, (75, 75, 75))
     #sprt = pygame.transform.rotozoom(sprt, 0, 1)
     sprt_size = sprt.get_size()
     window.blit(sprt, (window_x*2/5-sprt_size[0]/2, inc_y*1-sprt_size[1]/2))
 
-    t_remaining = int(t_live - (time.time() - t_start))
+    t_remaining = int(t_live - (t_now - t_start))
     t_remaining_str = ""
     tmp_str = str(t_remaining)
     print(tmp_str)
@@ -188,8 +189,8 @@ while 1:
     """
     try:
         pygame.image.save(window, "img\screenshot_" + str(i) + ".png")
-        set_wallpaper("img\screenshot_" + str(i) + ".png")
         generate_wall()
+        set_wallpaper("img\screenshot_" + str(i) + ".png")
         print("wallpaper set")
     except:
         print("set_wallpaper failed")
