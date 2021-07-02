@@ -12,3 +12,4 @@ To automatically refresh your life calendar each time you start your computer pu
 Made after watching Tim Urban Ted Talk (https://www.youtube.com/watch?v=arj7oStGLkU)
 
 ![alt text](https://github.com/liardnos/life-calendar-wallpaper/blob/main/screenshot.png)
+
