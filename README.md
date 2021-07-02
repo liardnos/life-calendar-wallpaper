@@ -11,7 +11,12 @@ To automatically refresh your life calendar each time you start your computer pu
 
 Made after watching Tim Urban Ted Talk (https://www.youtube.com/watch?v=arj7oStGLkU)
 
+require windows
+pip3 install pygame
+pip3 install wallpaper
+
+require linux
+pip3 install pygame
+
 ![alt text](https://github.com/liardnos/life-calendar-wallpaper/blob/main/screenshot.png)
 
-pip3 install pygame 
-pip3 install wallpaper
