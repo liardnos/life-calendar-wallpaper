@@ -13,7 +13,7 @@ life_expectancy = 80.8 # how many year you're supposed to live
 window_x = int(1920)
 window_y = int(1080)
 
-update_rate = 3 # how many seconds between wallpaper's updates (-1 = only one on user login)
+update_rate = 60 # how many seconds between wallpaper's updates (-1 = only one on user login)
 
 try:
     import pygame
@@ -104,8 +104,8 @@ def generate_wall():
 
     window.blit(sprt, (window_x*3/5-sprt_size[0]/2, inc_y*1-sprt_size[1]/2))
 
-    if datetime.datetime.fromtimestamp(time.time()).day == datetime.datetime.fromtimestamp(t_prev).day:
-        return
+    #if datetime.datetime.fromtimestamp(time.time()).day == datetime.datetime.fromtimestamp(t_prev).day:
+    #    return
     t_prev = time.time()
     rect = (0, inc_y*1.5, window_x, window_y - inc_y*3)
     pygame.Surface.fill(window, (0, 0, 0), rect=rect)
