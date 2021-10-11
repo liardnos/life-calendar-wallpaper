@@ -10,8 +10,8 @@ start = [7, 5, 2001] # your birthday day/month/year
 life_expectancy = 80.8 # how many year you're supposed to live
 
 # your screen size
-window_x = int(1920)
-window_y = int(1080)
+window_x = int(1920*2)
+window_y = int(1080*2)
 
 update_rate = 60 # how many seconds between wallpaper's updates (-1 = only one on user login)
 
@@ -75,12 +75,16 @@ font = pygame.font.Font(pygame.font.get_default_font(), int(size-2))
 #for x in range(40):
     #print("#"*40)
 
+offsetTimelaps = 0
 
 def generate_wall():
     global t_prev
+    global offsetTimelaps
     rect = (0, 0, window_x, inc_y*1.5)
     pygame.Surface.fill(window, (0, 0, 0), rect=rect)
-    t_now = time.time()
+    t_now = time.time() + offsetTimelaps
+    offsetTimelaps += 60*60*24*7
+
     print(t_now)
     live_percent = (t_now - t_start)/t_live*100
     sprt = font.render(str(live_percent)[0:10]+"%", True, (75, 75, 75))
@@ -94,7 +98,7 @@ def generate_wall():
     print(tmp_str)
     tmp_str = tmp_str[::-1]
     print(tmp_str)
-    for x in range(int(len(tmp_str)/3)+1):
+    for x in range(int(len(tmp_str)/3)+1):  
         t_remaining_str = tmp_str[x*3:x*3+3][::-1] + " " + t_remaining_str
     str(t_remaining_str)
 
@@ -106,12 +110,13 @@ def generate_wall():
 
     #if datetime.datetime.fromtimestamp(time.time()).day == datetime.datetime.fromtimestamp(t_prev).day:
     #    return
-    t_prev = time.time()
+    print("here")
+    t_prev = t_now
     rect = (0, inc_y*1.5, window_x, window_y - inc_y*3)
     pygame.Surface.fill(window, (0, 0, 0), rect=rect)
     n = 0
     t = t_start
-    actual = time.time() + weeks_len
+    actual = t_prev + weeks_len
     date_prev = datetime.datetime.fromtimestamp(t)
     for x in range(3, size_x-3):
         sprt = font.render(str(x-3), True, (75, 75, 75))
@@ -177,8 +182,7 @@ def generate_wall():
             date_prev = date
 
 i = 0
-t_prev = 0
-generate_wall()
+t_prev = time.time()
 T = time.time()
 while 1:
     """
@@ -187,10 +191,10 @@ while 1:
         if (event.type == QUIT):
             exit()
     """
+    generate_wall()
+    pygame.image.save(window, "screenshot_" + str(i) + ".png")
     try:
-        pygame.image.save(window, "img\screenshot_" + str(i) + ".png")
-        generate_wall()
-        set_wallpaper("img\screenshot_" + str(i) + ".png")
+        set_wallpaper("screenshot_" + str(i) + ".png")
         print("wallpaper set")
     except:
         print("set_wallpaper failed")
@@ -202,4 +206,4 @@ while 1:
     else:
         print("miss frame")
     T = time.time()
-    i = i % 1 + 1
+    i = (i+1) % 1
